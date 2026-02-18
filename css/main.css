@@ -412,13 +412,6 @@ body,
     left: 67px;
     font-size: 14px;
 }
-.main-content {
-    position: relative;
-    width: 1620px;
-    height: 100%;
-    padding: 0 0 0 57px;
-    margin-left: 300px;
-}
 .branding {
     position: relative;
     top: 41px;
@@ -896,4 +889,118 @@ body,
 .button-effect:hover:after {
     -webkit-transform: translate3d(0, 100%, 0);
     transform: translate3d(0, 100%, 0);
+}
+
+/*---------------------------- */
+/* Thats the abellio way       */ 
+
+/* Layout */
+
+
+.main-content {
+  overflow-x: auto;        /* allow horizontal scrolling if needed */
+  padding: 10rem 0 8rem 8rem;
+
+  display: flex;
+  flex-direction: row;     /* keep items in a row */
+  flex-wrap: nowrap;       /* do NOT wrap */
+  gap: 60px;
+
+  background: #e6e6e6;
+
+  position: relative;
+  width: 100%;             /* full width of viewport or parent */
+  height: auto;  
+  margin-left: 300px;
+
+  align-items: flex-start;
+}
+
+.traffic-card {
+    width: 550px;
+    min-height: 620px;
+
+    background: #f3f3f3;
+    padding: 40px;
+    border-radius: 2px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.card-header {
+    display: flex;
+    align-items: center;
+    margin-bottom: 35px;
+}
+
+.line-badge {
+    position: relative;
+    background: #0b6e8e;
+    color: white;
+    font-weight: 600;
+    font-size: 20px;
+    padding: 10px 22px 10px 26px;
+}
+
+.line-badge::before {
+    content: "";
+    position: absolute;
+    left: -18px;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 22px solid transparent;
+    border-bottom: 22px solid transparent;
+    border-right: 18px solid #0b6e8e;
+}
+
+.warning-icon {
+    background: #8c8f93;
+    color: white;
+    padding: 10px 14px;
+    font-size: 16px;
+}
+
+/* Route */
+.route-from,
+.route-to {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.3;
+}
+
+.route-arrow {
+    font-size: 22px;
+    margin: 6px 0;
+}
+
+.route-direction {
+    font-style: italic;
+    color: #555;
+    margin-top: 6px;
+}
+
+.section {
+    margin-top: 30px;
+}
+
+.section-title {
+    color: #e21c23;
+    font-weight: 600;
+    font-size: 15px;
+    margin-bottom: 6px;
+}
+
+.section-text {
+    font-size: 15px;
+    color: #333;
+}
+
+.card-footer {
+    margin-top: 60px;
+    text-align: center;
+    font-size: 14px;
+    color: #8b8b8b;
 }
