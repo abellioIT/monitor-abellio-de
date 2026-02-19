@@ -467,7 +467,6 @@ body,
     position: relative;
     margin: 130px 0 56px;
     padding-top: 49px;
-    height: 100%;
 }
 .traffic-news-area {
     width: 100%;
@@ -895,35 +894,30 @@ body,
 /* Thats the abellio way       */ 
 
 .main-content {
-  overflow-x: auto;        /* allow horizontal scrolling if needed */
+  overflow: hidden;      /* hide cards that move out */
+  width: 100%;
+  margin-left: 300px; /*matches the sidebar*/
   padding: 10rem 0 8rem 8rem;
+}
 
+.cards-wrapper {
   display: flex;
-  flex-direction: row;     /* keep items in a row */
-  flex-wrap: nowrap;       /* do NOT wrap */
-  gap: 60px;
-
-  background: #e6e6e6;
-
-  position: relative;
-  width: 100%;             /* full width of viewport or parent */
-  height: auto;  
-  margin-left: 300px;
-
-  align-items: flex-start;
+  gap: 40px;             /* space between cards */
+  transition: transform 0.5s ease;  /* smooth slide */
 }
 
 .traffic-card {
-    width: 550px;
-    min-height: 620px;
-
-    background: #f3f3f3;
-    padding: 40px;
-    border-radius: 2px;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+  min-width: 350px;      /* or fixed width 550px */
+  max-width: 550px;
+  background: linear-gradient(145deg, #f3f3f3, #eaeaea);
+  box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+  border-radius: 12px;
+  padding: 30px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: grab;
+  flex-shrink: 0;        /* prevent shrinking */
 }
 
 .card-header {
@@ -1008,4 +1002,10 @@ body,
     text-align: center;
     font-size: 14px;
     color: #8b8b8b;
+}
+
+.headline {
+    font-size: 26px;
+    font-weight: 500;
+    line-height: 1.3;
 }

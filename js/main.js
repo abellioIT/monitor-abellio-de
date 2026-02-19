@@ -220,13 +220,26 @@ function renderTrafficCards(data) {
     </div>
   `;}).join("");
   return html
+}
 
+function startTicker() {
+  const wrapper = document.querySelector(".cards-wrapper");
+  const cardWidth = wrapper.firstElementChild.offsetWidth + 40; // 40px = gap
+
+  setInterval(() => {
+    wrapper.style.transition = "transform 0.5s ease";
+    wrapper.style.transform = `translateX(-${cardWidth}px)`;
+    setTimeout(() => {
+      wrapper.style.transition = "none";        // remove transition
+      wrapper.appendChild(wrapper.firstElementChild); // move first card to end
+      wrapper.style.transform = "translateX(0)";      // reset position
+    }, 500); // match transition duration
+    // Änder diese Nummer um den Ticker zu verlangsamen ode rzu beschleunigen (5000 => 5 Sekunden)
+  }, 5000);
 }
 
 // --------------------------------------------------------------------
 // The action starts here
-
-
 
 const lineColors = {
   rb75: "#b17f4a",
@@ -267,8 +280,14 @@ Promise.all([
     const combined = pv.concat(pb);
     console.log(combined)
     const html = renderTrafficCards(combined);
-    document.getElementById("main-content").innerHTML = html;
+    document.getElementById("cards-wrapper").innerHTML = html;
+    
+    // Wärend die Daten geladen werden, wird nur ein Preloader angezeigt.
+    // Dieser wird hier entfernt 
     document.querySelector(".preloader")?.remove();
+
+    startTicker();
+
   })
   .catch(error => {
     console.error("Fetch error:", error);
