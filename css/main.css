@@ -894,9 +894,6 @@ body,
 /*---------------------------- */
 /* Thats the abellio way       */ 
 
-/* Layout */
-
-
 .main-content {
   overflow-x: auto;        /* allow horizontal scrolling if needed */
   padding: 10rem 0 8rem 8rem;
