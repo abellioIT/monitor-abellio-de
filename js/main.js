@@ -217,11 +217,6 @@ function renderTrafficCards(data) {
                 <div>${item.betroffener_abschnitt.von} bis ${item.betroffener_abschnitt.nach}</div>
             </div>
         </div>
-
-        <div class="card-footer">
-            Meldung vom ${item.meldung}
-        </div>
-
     </div>
   `;}).join("");
   return html
