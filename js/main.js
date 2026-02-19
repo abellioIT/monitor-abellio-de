@@ -263,6 +263,7 @@ Promise.all([
   .then(([verkehrHtml, baustellenHtml]) => {
     const pv = parseSiteFormResponse(verkehrHtml);
     const pb = parseSiteFormResponse(baustellenHtml);
+    // Als erstes sollen die Verkehrmeldungen angezeigt werden und dann erst die Baustellenmeldung
     const combined = pv.concat(pb);
     console.log(combined)
     const html = renderTrafficCards(combined);
