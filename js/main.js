@@ -116,6 +116,18 @@ function removePreloader() {
 
 //---------------------------------------------------------------------------------------------------
 // Ab hier hat Abellio das Zepter wieder selbst in die Hand genommen und gecodet
+//
+
+
+function fetchHtml(url) {
+  return fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network error for ${url}`);
+      }
+      return response.text();
+    });
+}
 
 // Diese Funktion hol sich aus dem CMS json.
 // Das Siteforum liefert an sich aber nur HTML
@@ -168,65 +180,65 @@ function parseSiteFormResponse(raw) {
 }
 
 function renderTrafficCards(data) {
-    const container = document.getElementById("main-content");
 
-    container.innerHTML = data.map(item => `
-        <div class="traffic-card">
+  const html = data.map(item => `
+      <div class="traffic-card">
 
-            <div>
-                <div class="card-header">
-                    <div class="line-badge">${item.linie}</div>
-                    <div class="warning-icon">⚠</div>
-                </div>
+          <div>
+              <div class="card-header">
+                  <div class="line-badge">${item.linie}</div>
+                  <div class="warning-icon">⚠</div>
+              </div>
 
-                <div class="route">
-                    <div class="route-from">${item.von}</div>
-                    <div class="route-arrow">→</div>
-                    <div class="route-to">${item.nach}</div>
-                    <div class="route-direction">(Einfache Richtung)</div>
-                </div>
+              <div class="route">
+                  <div class="route-from">${item.von}</div>
+                  <div class="route-arrow">→</div>
+                  <div class="route-to">${item.nach}</div>
+                  <div class="route-direction">(Einfache Richtung)</div>
+              </div>
 
-                <div class="section">
-                    <div class="section-title">Zeitraum:</div>
-                    <div>${item.zeitraum}</div>
-                </div>
+              <div class="section">
+                  <div class="section-title">Zeitraum:</div>
+                  <div>${item.zeitraum}</div>
+              </div>
 
-                <div class="section">
-                    <div class="section-title">Betroffener Abschnitt:</div>
-                    <div>${item.betroffener_abschnitt.von} bis ${item.betroffener_abschnitt.nach}</div>
-                </div>
-            </div>
+              <div class="section">
+                  <div class="section-title">Betroffener Abschnitt:</div>
+                  <div>${item.betroffener_abschnitt.von} bis ${item.betroffener_abschnitt.nach}</div>
+              </div>
+          </div>
 
-            <div class="card-footer">
-                Meldung vom ${item.meldung}
-            </div>
+          <div class="card-footer">
+              Meldung vom ${item.meldung}
+          </div>
 
-        </div>
-    `).join("");
+      </div>
+  `).join("");
+  return html
+
 }
-
-
 
 // --------------------------------------------------------------------
 // The action starts here
 
-const url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=0";
 
-fetch(url)
-    .then(response => {
-        if (!response.ok) {
-            throw new Error("Network response was not ok");
-        }
-        return response.text();
-    })
-    .then(html => {
-      const parsed = parseSiteFormResponse(html);
-      document.getElementById("main-content").innerHTML = parsed;
-      console.log(parsed);
-      renderTrafficCards(parsed);
-      document.querySelector(".preloader")?.remove();
-      
-    })
-    .catch(error => {
-        console.error("Fetch error:", error);
-    });
+const verkehrslage_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=0";
+const baustellen_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=1";
+
+
+Promise.all([
+  fetchHtml(verkehrslage_url),
+  fetchHtml(baustellen_url)
+])
+  .then(([verkehrHtml, baustellenHtml]) => {
+    const pv = parseSiteFormResponse(verkehrHtml);
+    const pb = parseSiteFormResponse(baustellenHtml);
+    const combined = pv.concat(pb);
+    console.log(combined)
+    const html = renderTrafficCards(combined);
+    document.getElementById("main-content").innerHTML = html;
+    document.querySelector(".preloader")?.remove();
+  })
+  .catch(error => {
+    console.error("Fetch error:", error);
+});
