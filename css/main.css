@@ -937,31 +937,39 @@ body,
 
 .line-badge {
     position: relative;
-    background: #0b6e8e;
     color: white;
     font-weight: 600;
     font-size: 20px;
     padding: 10px 22px 10px 26px;
 }
 
-.line-badge::before {
-    content: "";
-    position: absolute;
-    left: -18px;
-    top: 0;
-    width: 0;
-    height: 0;
-    border-top: 22px solid transparent;
-    border-bottom: 22px solid transparent;
-    border-right: 18px solid #0b6e8e;
-}
+
+/* Dies ist der kleine Zipfel vor der Karten */
+/* .line-badge::before { */
+/*     content: ""; */
+/*     position: absolute; */
+/*     left: -18px; */
+/*     top: 0; */
+/*     width: 0; */
+/*     height: 0; */
+/*     border-top: 22px solid transparent; */
+/*     border-bottom: 22px solid transparent; */
+/*     border-right: 18px solid #0b6e8e; */
+/* } */
 
 .warning-icon {
-    background: #8c8f93;
-    color: white;
-    padding: 10px 14px;
-    font-size: 16px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
+
+.warning-icon svg{
+    width: 100%;
+    height: 100%;
+}
+
 
 /* Route */
 .route-from,
