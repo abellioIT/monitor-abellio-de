@@ -135,7 +135,7 @@ function fetchHtml(url) {
 // https://abrmd.siteforum.com/de/app/webtools/messages.widget?&design=0&navigation=0&action=overview&scheduled=0
 // zurückgegeben wird.
 
-function parseSiteFormResponse(raw) {
+function parseSiteFormResponse(type, raw) {
   try {
     const parser = new DOMParser();
     const doc = parser.parseFromString(raw, "text/html");
@@ -159,6 +159,7 @@ function parseSiteFormResponse(raw) {
       const headline = el.querySelector(".ids-wt-label")?.textContent.trim() || "";
 
       results.push({
+        type,
         linie,
         von,
         nach,
@@ -181,10 +182,11 @@ function parseSiteFormResponse(raw) {
 
 function renderTrafficCards(data) {
 
-  const danger = `<svg xmlns="http://www.w3.org/2000/svg" height="" viewBox="0 -960 960 960" width="" fill="#000000"><path d="M480-79q-16 0-30.5-6T423-102L102-423q-11-12-17-26.5T79-480q0-16 6-31t17-26l321-321q12-12 26.5-17.5T480-881q16 0 31 5.5t26 17.5l321 321q12 11 17.5 26t5.5 31q0 16-5.5 30.5T858-423L537-102q-11 11-26 17t-31 6Zm0-361q17 0 28.5-11.5T520-480v-160q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640v160q0 17 11.5 28.5T480-440Zm0 120q17 0 28.5-11.5T520-360q0-17-11.5-28.5T480-400q-17 0-28.5 11.5T440-360q0 17 11.5 28.5T480-320Z"/></svg>`
+  const danger = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#000000"><path d="M480-79q-16 0-30.5-6T423-102L102-423q-11-12-17-26.5T79-480q0-16 6-31t17-26l321-321q12-12 26.5-17.5T480-881q16 0 31 5.5t26 17.5l321 321q12 11 17.5 26t5.5 31q0 16-5.5 30.5T858-423L537-102q-11 11-26 17t-31 6Zm0-361q17 0 28.5-11.5T520-480v-160q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640v160q0 17 11.5 28.5T480-440Zm0 120q17 0 28.5-11.5T520-360q0-17-11.5-28.5T480-400q-17 0-28.5 11.5T440-360q0 17 11.5 28.5T480-320Z"/></svg>`
 
 
   const html = data.map(item =>  {
+
 
     const key = item.linie.toLowerCase().replace(/\s+/g, "");
     const color = lineColors[key] || "#999"; // fallback
@@ -206,6 +208,10 @@ function renderTrafficCards(data) {
                 <div class="route-to">${item.nach}</div>
                 <div class="route-direction">(Einfache Richtung)</div>
             </div>
+            
+            <div class="section headline">
+            ${item.headline}
+            </div>
 
             <div class="section">
                 <div class="section-title">Zeitraum:</div>
@@ -222,6 +228,7 @@ function renderTrafficCards(data) {
   return html
 }
 
+// Ticker slidet n
 function startTicker() {
   const wrapper = document.querySelector(".cards-wrapper");
   const cardWidth = wrapper.firstElementChild.offsetWidth + 40; // 40px = gap
@@ -230,9 +237,9 @@ function startTicker() {
     wrapper.style.transition = "transform 0.5s ease";
     wrapper.style.transform = `translateX(-${cardWidth}px)`;
     setTimeout(() => {
-      wrapper.style.transition = "none";        // remove transition
-      wrapper.appendChild(wrapper.firstElementChild); // move first card to end
-      wrapper.style.transform = "translateX(0)";      // reset position
+      wrapper.style.transition = "none";
+      wrapper.appendChild(wrapper.firstElementChild);
+      wrapper.style.transform = "translateX(0)";
     }, 500); // match transition duration
     // Änder diese Nummer um den Ticker zu verlangsamen ode rzu beschleunigen (5000 => 5 Sekunden)
   }, 5000);
@@ -274,8 +281,8 @@ Promise.all([
   fetchHtml(baustellen_url)
 ])
   .then(([verkehrHtml, baustellenHtml]) => {
-    const pv = parseSiteFormResponse(verkehrHtml);
-    const pb = parseSiteFormResponse(baustellenHtml);
+    const pv = parseSiteFormResponse("verkehr",verkehrHtml);
+    const pb = parseSiteFormResponse("baustelle",baustellenHtml);
     // Als erstes sollen die Verkehrmeldungen angezeigt werden und dann erst die Baustellenmeldung
     const combined = pv.concat(pb);
     console.log(combined)
