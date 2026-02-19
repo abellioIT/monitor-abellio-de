@@ -891,7 +891,7 @@ body,
 .main-content {
   overflow: hidden;      /* hide cards that move out */
   width: 100%;
-  margin-left: 300px; /*matches the sidebar*/
+  /* margin-left: 300px; */
   padding: 12rem 0 4rem 4rem;
 }
 
