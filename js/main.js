@@ -158,7 +158,7 @@ function renderTrafficCards(data) {
 
             <div class="route">
                 <div class="route-from">${item.von}</div>
-                <div class="route-arrow">→</div>
+                <div class="route-arrow">nach</div>
                 <div class="route-to">${item.nach}</div>
                 <div class="route-direction">(Einfache Richtung)</div>
             </div>
