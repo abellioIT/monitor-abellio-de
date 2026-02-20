@@ -554,9 +554,10 @@ body,
     position: relative;
     color: white;
     font-weight: 600;
-    font-size: 1.5rem;
+    font-size: 2rem;
     /* padding: 10px 22px 10px 26px; */
-    padding: 1rem 1.2rem;
+    height: 4rem;
+    padding: 0.5rem;
 
     clip-path: polygon(
         0 0,          /* top-left */
@@ -581,11 +582,12 @@ body,
 /* } */
 
 .warning-icon {
-    width: 36px;
-    height: 36px;
+    height: 4rem;
+    width: 4rem;
     display: flex;
     align-items: center;
     justify-content: center;
+    background: #6b717a;
 }
 
 .warning-icon svg{
