@@ -284,7 +284,11 @@ Promise.all([
     console.error("Fetch error:", error);
 });
 
+// Nach 10 Minuten nen Reload
 const reloadAfter =  10 * 60 * 1000;
+
+// Nach 10 Sekunden nen Reload
+// const reloadAfter =  10 * 1000;
 
 setTimeout(() => {
   window.location.reload();
