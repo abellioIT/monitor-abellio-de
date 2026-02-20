@@ -132,7 +132,8 @@ function renderTrafficCards(data) {
             </div>
             
             <div class="section">
-            ${item.headline}
+                <div class="section-title">Grund:</div>
+                <div>${item.headline}</div>
             </div>
 
             <div class="section">
