@@ -100,7 +100,7 @@ function renderTrafficCards(data) {
   const danger = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#000000"><path d="M480-79q-16 0-30.5-6T423-102L102-423q-11-12-17-26.5T79-480q0-16 6-31t17-26l321-321q12-12 26.5-17.5T480-881q16 0 31 5.5t26 17.5l321 321q12 11 17.5 26t5.5 31q0 16-5.5 30.5T858-423L537-102q-11 11-26 17t-31 6Zm0-361q17 0 28.5-11.5T520-480v-160q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640v160q0 17 11.5 28.5T480-440Zm0 120q17 0 28.5-11.5T520-360q0-17-11.5-28.5T480-400q-17 0-28.5 11.5T440-360q0 17 11.5 28.5T480-320Z"/></svg>`
   // Für Baustellen
   const maintenance = `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 -960 960 960" fill="#1f1f1f"><path d="M508.5-331.5Q520-343 520-360t-11.5-28.5Q497-400 480-400t-28.5 11.5Q440-377 440-360t11.5 28.5Q463-320 480-320t28.5-11.5ZM440-440h80v-200h-80v200ZM370-80l-16-128q-13-5-24.5-12T307-235l-119 50L78-375l103-78q-1-7-1-13.5v-27q0-6.5 1-13.5L78-585l110-190 119 50q11-8 23-15t24-12l16-128h220l16 128q13 5 24.5 12t22.5 15l119-50 110 190-103 78q1 7 1 13.5v27q0 6.5-2 13.5l103 78-110 190-118-50q-11 8-23 15t-24 12L590-80H370Zm70-80h79l14-106q31-8 57.5-23.5T639-327l99 41 39-68-86-65q5-14 7-29.5t2-31.5q0-16-2-31.5t-7-29.5l86-65-39-68-99 42q-22-23-48.5-38.5T533-694l-13-106h-79l-14 106q-31 8-57.5 23.5T321-633l-99-41-39 68 86 64q-5 15-7 30t-2 32q0 16 2 31t7 30l-86 65 39 68 99-42q22 23 48.5 38.5T427-266l13 106Zm40-320Z"/></svg>`
-
+  
 
   const html = data.map(item =>  {
     var icon
@@ -131,7 +131,7 @@ function renderTrafficCards(data) {
                 <div class="route-direction">(Einfache Richtung)</div>
             </div>
             
-            <div class="section headline">
+            <div class="section">
             ${item.headline}
             </div>
 
@@ -198,29 +198,53 @@ const lineColors = {
 
 
 const verkehrslage_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=0";
+// const verkehrslage_url = "https://abrmd.siteforum.com/de/app/webtools/";
 const baustellen_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=1";
 
 
 Promise.all([
   fetchHtml(verkehrslage_url),
-  // fetchHtml(baustellen_url)
+  fetchHtml(baustellen_url)
 ])
-  .then(([verkehrHtml]) => {
-  // .then(([verkehrHtml, baustellenHtml]) => {
+  // .then(([verkehrHtml]) => {
+  .then(([verkehrHtml, baustellenHtml]) => {
     const pv = parseSiteFormResponse("verkehr",verkehrHtml);
-    // const pb = parseSiteFormResponse("baustelle",baustellenHtml);
+    const pb = parseSiteFormResponse("baustelle",baustellenHtml);
+  
     // Als erstes sollen die Verkehrmeldungen angezeigt werden und dann erst die Baustellenmeldung
-    // const combined = pv.concat(pb);
-    // console.log(combined)
-    console.log(pv)
-    const html = renderTrafficCards(pv);
+    const combined = pv.concat(pb);
+    console.log(combined)
+    // Wenn keine Verkehrsmeldungen am Start sind dann return diese tolle Meldung, dass alles ok ist :))))))
+    if((pv.length === 0) && (pb.length === 0)){
+      var html = `
+      <div class="traffic-card no-messages">
+
+          <div>
+              <div class="section headline">
+              <b>Verkehrmeldungen</b>
+              </div>
+
+              <div class="section">
+              Momentan liegen keine Verkehrmeldungen vor.
+              </div>
+
+              <div class="section">
+              <em>Abellio wünscht gute Fahrt!</em>
+              </div>
+          </div>
+      </div>
+    `
+    }
+    var html = renderTrafficCards(combined);
     document.getElementById("cards-wrapper").innerHTML = html;
     
     // Wärend die Daten geladen werden, wird nur ein Preloader angezeigt.
     // Dieser wird hier entfernt 
     document.querySelector(".preloader")?.remove();
-
-    startTicker();
+    
+    if(pv.Length > 1){
+      startTicker();
+    }
 
   })
   .catch(error => {
