@@ -553,8 +553,15 @@ body,
     font-weight: 600;
     font-size: 20px;
     padding: 10px 22px 10px 26px;
-}
 
+    clip-path: polygon(
+        0 0,          /* top-left */
+        100% 0,       /* top-right */
+        100% 100%,    /* bottom-right */
+        12px 100%,    /* move right from bottom-left */
+        0 calc(100% - 12px)  /* diagonal cut */
+    );
+}
 
 /* Dies ist der kleine Zipfel vor der Karten */
 /* .line-badge::before { */
