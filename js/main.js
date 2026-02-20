@@ -150,10 +150,13 @@ function renderTrafficCards(data) {
   return html
 }
 
-// Ticker slidet n
+// Ticker slidet alle Elemente in .cards-wrapper (hier .traffic-cards) von rechts nach links
+// das vorne verschwindenede element, wird hinten drangetan
 function startTicker() {
   const wrapper = document.querySelector(".cards-wrapper");
   const cardWidth = wrapper.firstElementChild.offsetWidth + 40; // 40px = gap
+
+  const delay = 15 * 1000 // 15 Sekunden
 
   setInterval(() => {
     wrapper.style.transition = "transform 0.5s ease";
@@ -164,7 +167,7 @@ function startTicker() {
       wrapper.style.transform = "translateX(0)";
     }, 500); // match transition duration
     // Änder diese Nummer um den Ticker zu verlangsamen ode rzu beschleunigen (5000 => 5 Sekunden)
-  }, 5000);
+  }, delay);
 }
 
 // --------------------------------------------------------------------
@@ -200,15 +203,17 @@ const baustellen_url = "https://abrmd.siteforum.com/de/app/webtools/messages.wid
 
 Promise.all([
   fetchHtml(verkehrslage_url),
-  fetchHtml(baustellen_url)
+  // fetchHtml(baustellen_url)
 ])
-  .then(([verkehrHtml, baustellenHtml]) => {
+  .then(([verkehrHtml]) => {
+  // .then(([verkehrHtml, baustellenHtml]) => {
     const pv = parseSiteFormResponse("verkehr",verkehrHtml);
-    const pb = parseSiteFormResponse("baustelle",baustellenHtml);
+    // const pb = parseSiteFormResponse("baustelle",baustellenHtml);
     // Als erstes sollen die Verkehrmeldungen angezeigt werden und dann erst die Baustellenmeldung
-    const combined = pv.concat(pb);
-    console.log(combined)
-    const html = renderTrafficCards(combined);
+    // const combined = pv.concat(pb);
+    // console.log(combined)
+    console.log(pv)
+    const html = renderTrafficCards(pv);
     document.getElementById("cards-wrapper").innerHTML = html;
     
     // Wärend die Daten geladen werden, wird nur ein Preloader angezeigt.
