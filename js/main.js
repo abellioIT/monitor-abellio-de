@@ -189,7 +189,7 @@ function startTicker() {
   const wrapper = document.querySelector(".cards-wrapper");
   const cardWidth = wrapper.firstElementChild.offsetWidth + 40; // 40px = gap
 
-  const delay = 15 * 1000 // 15 Sekunden
+  const delay = 12 * 1000 // 15 Sekunden
 
   setInterval(() => {
     wrapper.style.transition = "transform 0.5s ease";
