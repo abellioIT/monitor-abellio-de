@@ -115,7 +115,7 @@ body,
 input,
 textarea {
     font-size: 18px;
-    font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    font-family: "abellio-kundencenter-monitore" ,Arial, "Helvetica Neue", Helvetica, sans-serif;
 }
 body {
     background: #e1e1e1;
@@ -522,7 +522,7 @@ body,
 
 .cards-wrapper {
   display: flex;
-  padding-left: 20%;
+  padding-left: 13%;
 
   gap: 40px;             /* space between cards */
   transition: transform 0.5s ease;  /* smooth slide */
@@ -619,13 +619,14 @@ body,
 }
 
 .section {
+  font-size: 1.8rem;
   margin: 3rem 0 3rem 0;
 }
 
 .section-title {
     color: #e21c23;
     font-weight: 600;
-    font-size: 15px;
+    font-size: 1.5rem;
     margin-bottom: 6px;
 }
 

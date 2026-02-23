@@ -241,7 +241,7 @@ Promise.all(promises).then((results) => {
     console.log(combined);
 
     // Wenn keine Verkehrsmeldungen am Start sind dann return diese tolle Meldung, dass alles ok ist :))))))
-    if((pv.length === 0) && (pb.length === 0)){
+    if(combined.length === 0){
       var html = `
       <div class="traffic-card no-messages">
 
