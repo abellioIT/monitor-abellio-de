@@ -15,7 +15,6 @@ var timer,
     trafficBoxShowDuration = 1e4,
     delay = slideShowDuration,
     isFirstRun = !0;
-function reloadPage() {}
 
 $("#header-date").clock({ seconds: "false", langSet: "de" }),
 $("#header-time").clock({ seconds: "false", calendar: "false", langSet: "de" });
@@ -231,7 +230,6 @@ const lineColors = {
 
 
 const verkehrslage_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=0";
-// const verkehrslage_url = "https://abrmd.siteforum.com/de/app/webtools/";
 const baustellen_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=1";
 
 
