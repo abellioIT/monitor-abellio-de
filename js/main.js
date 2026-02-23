@@ -138,7 +138,7 @@ function renderTrafficCards(data) {
   </svg>
   `
   
-
+  
   const html = data.map(item =>  {
     var icon
 
@@ -209,46 +209,37 @@ function startTicker(delay) {
 // --------------------------------------------------------------------
 // The action starts here
 
-const lineColors = {
-  rb75: "#b17f4a",
-  re17: "#36a9e1",
-  rb20: "#95c11f",
-  rb59: "#d47f8f",
-  rb51: "#804a96",
-  re19: "#95c11f",
-  re15: "#2aaae2",
-  re9: "#000",
-  re16: "#2e4c9c",
-  re10: "#52ae32",
-  "30": "#000",
-  re18: "#000",
-  rb44: "#d47f8f",
-  rb25: "#52ae32",
-  rb48: "#2d847e",
-  rb77: "#73542f",
-  re8: "#000",
-  re28: "#000",
-  s7: "#000",
-  rb57: "#000"
-};
+// URL-Parameter auslesen
+const urlParams = new URLSearchParams(window.location.search);
+const type = urlParams.get('type') || 'alle'; // z.B. ?type=verkehr, ?type=baustelle, ?type=alle
+
+let promises = [];
+
+if (type === 'verkehr' || type === 'alle' || !type) {
+  promises.push(fetchHtml(verkehrslage_url));
+}
+if (type === 'baustelle' || type === 'alle' || !type) {
+  promises.push(fetchHtml(baustellen_url));
+}
 
 
-const verkehrslage_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=0";
-const baustellen_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=1";
+Promise.all(promises).then((results) => {
 
+    let pv = [];
+    let pb = [];
+    let index = 0;
 
-Promise.all([
-  fetchHtml(verkehrslage_url),
-  fetchHtml(baustellen_url)
-])
-  // .then(([verkehrHtml]) => {
-  .then(([verkehrHtml, baustellenHtml]) => {
-    const pv = parseSiteFormResponse("verkehr",verkehrHtml);
-    const pb = parseSiteFormResponse("baustelle",baustellenHtml);
-  
-    // Als erstes sollen die Verkehrmeldungen angezeigt werden und dann erst die Baustellenmeldung
+    if (type === 'verkehr' || type === 'alle' || !type) {
+      pv = parseSiteFormResponse("verkehr", results[index]);
+      index++;
+    }
+    if (type === 'baustelle' || type === 'alle' || !type) {
+      pb = parseSiteFormResponse("baustelle", results[index]);
+    }
+
     const combined = pv.concat(pb);
-    console.log(combined)
+    console.log(combined);
+
     // Wenn keine Verkehrsmeldungen am Start sind dann return diese tolle Meldung, dass alles ok ist :))))))
     if((pv.length === 0) && (pb.length === 0)){
       var html = `
