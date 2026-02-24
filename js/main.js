@@ -260,8 +260,9 @@ Promise.all(promises).then((results) => {
           </div>
       </div>
     `
+    }else{
+      var html = renderTrafficCards(combined);
     }
-    var html = renderTrafficCards(combined);
     document.getElementById("cards-wrapper").innerHTML = html;
     
     // Wärend die Daten geladen werden, wird nur ein Preloader angezeigt.
