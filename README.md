@@ -35,3 +35,9 @@ Dieses ganze Ding ist Reverse-Engineered, daher ist zu hinterfragen, was wirklic
             jquery-1.11.2.min.js    => müsste wahrscheinlich mal geupdatet werden
 
 ```
+
+## Docker Image
+Wir speichern die Docker Images in Container-Registry dieses Repositorys. Ein neues Image baut man mit:
+```bash
+docker build . -t ghcr.io/abellioIT/monitor-abellio-de:<version>
+```
