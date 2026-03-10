@@ -1,0 +1,26 @@
+name: Sync to GitLab
+run-name: ${{ github.actor }} is syncing to deployment repo!
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  sync:
+    runs-on: ubuntu-22.04
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.GITLAB_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan gitlab.paar-it.de >> ~/.ssh/known_hosts
+
+      - name: Push to GitLab
+        run: |
+          git remote add gitlab git@gitlab.paar-it.de:001269-abellio-gmbh/abellio-website/abellio-webseite-monitor.git
+          git push gitlab main
