@@ -23,5 +23,6 @@ jobs:
 
       - name: Push to GitLab
         run: |
+          ls -la
           git remote add gitlab git@gitlab.paar-it.de:001269-abellio-gmbh/abellio-website/abellio-webseite-monitor.git
           git push gitlab main
