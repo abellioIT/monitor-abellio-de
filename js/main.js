@@ -40,22 +40,12 @@ $("#header-time").clock({ seconds: "false", calendar: "false", langSet: "de" });
 // Ab hier hat Abellio das Zepter wieder selbst in die Hand genommen und gecodet
 //
 
-function fetchHtml(url) {
-  return fetch(url)
-    .then(response => {
-      if (!response.ok) {
-        throw new Error(`Network error for ${url}`);
-      }
-      return response.text();
-    });
-}
 
 // Diese Funktion hol sich aus dem CMS json.
 // Das Siteforum liefert an sich aber nur HTML
 // Daher bauen wir hier einen Parser für dass HTML welchs
 // https://abrmd.siteforum.com/de/app/webtools/messages.widget?&design=0&navigation=0&action=overview&scheduled=0
 // zurückgegeben wird.
-
 function parseSiteFormResponse(meldung, raw) {
   try {
     const parser = new DOMParser();
@@ -206,6 +196,15 @@ function startTicker(delay) {
   }, delay);
 }
 
+function fetchHtml(url) {
+  return fetch(url)
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Network error for ${url}`);
+      }
+      return response.text();
+    });
+}
 // --------------------------------------------------------------------
 // The action starts here
 
@@ -215,13 +214,10 @@ const type = urlParams.get('type') || 'alle'; // z.B. ?type=verkehr, ?type=baust
 
 let promises = [];
 
-if (type === 'verkehr' || type === 'alle' || !type) {
-  promises.push(fetchHtml(verkehrslage_url));
-}
-if (type === 'baustelle' || type === 'alle' || !type) {
-  promises.push(fetchHtml(baustellen_url));
-}
+const fetchVerkehr = (type === 'verkehr' || type === 'alle' || !type) ? fetchHtml(verkehrslage_url) : Promise.resolve();
+const fetchBaustelle = (type === 'baustelle' || type === 'alle' || !type) ? fetchHtml(baustellen_url) : Promise.resolve();;
 
+promises.push(fetchVerkehr, fetchBaustelle);
 
 Promise.all(promises).then((results) => {
 
