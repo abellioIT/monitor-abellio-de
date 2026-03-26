@@ -38,7 +38,8 @@ jobs:
           rm -rf .github/workflows
           git fetch gitlab master
           git checkout gitlab/master -- .gitlab-ci.yml || true
+          git status
 
-      - name: Push to GitLab
-        run: |
-          git push gitlab main:master --force
+      # - name: Push to GitLab
+      #   run: |
+      #     git push gitlab main:master
