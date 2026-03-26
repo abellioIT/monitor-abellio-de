@@ -36,7 +36,8 @@ jobs:
         run: |
           git fetch gitlab master
           git checkout main
-          git merge gitlab/master --allow-unrelated-histories -m "Sync to UponU" || true
+          git merge gitlab/master --allow-unrelated-histories -m "${{ github.event.head_commit.message || 'manual trigger' }}" || true
+          git status
 
       - name: Resolve Conflicts between the two different ci-files
         run: |
@@ -46,17 +47,13 @@ jobs:
           git checkout gitlab/master -- .gitlab-ci.yml || true
           git add .gitlab-ci.yml || true
 
+  
       - name: Stage, Commit and Push
         run: |
+          git status
           # Add local changes from GitHub repo (if any)
           git add -A
-
-          # Check if there is anything to commit
-          if git diff --cached --quiet HEAD --; then
-            echo "No local changes to commit."
-          else
-            git commit -m "Sync from Github to Gitlab (last commit: ${{ github.event.head_commit.message || 'manual trigger' }})"
-          fi
+          git commit -m "${{ github.event.head_commit.message || 'manual trigger' }}"
 
           # Push changes to GitLab only if the local branch is ahead
           LOCAL=$(git rev-parse main)
