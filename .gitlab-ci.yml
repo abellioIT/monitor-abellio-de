@@ -1,0 +1,31 @@
+stages:
+
+  - deploy
+
+
+.deploy_script: &deploy_script
+  image: "alpine/ansible:2.18.6"
+  script:
+    - apk add --update --no-cache git openssh-client
+    - 'command -v ssh-agent >/dev/null'
+    - eval $(ssh-agent -s)
+    - cat $DEPLOYMENT_SSH_KEY | tr -d '\r' | ssh-add - 
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - cd /
+    - git clone -b Openstack-Migration https://$GIT_ANSIBLE_USER:$GIT_ANSIBLE_PASSWORD@gitlab.paar-it.de/001269-abellio-gmbh/abellio-website/abellio-website-deploy
+    - cd abellio-website-deploy
+    - ansible-galaxy install -r requirements.yml
+    - ansible-playbook -u deployment  deploy_monitor.yml
+
+deploy_prod_new:
+  tags:
+    - prod-new
+  stage: deploy
+  when: manual
+  only:
+    - master
+  variables:
+    ANSIBLE_INVENTORY: ./inventories/prod_new/hosts
+  <<: *deploy_script
+
