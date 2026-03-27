@@ -402,18 +402,6 @@ body,
 .box-text p {
     margin-top: 0;
 }
-.box-notice {
-    width: 100%;
-    padding: 15px 19px 30px 80px;
-    font-size: 28px;
-    line-height: 1.28571429;
-    font-weight: bold;
-    background: #c71712 url("../img/flag-arrow.png") no-repeat 19px 18px;
-    color: #fff;
-}
-.box-notice p {
-    margin: 15px 0 0;
-}
 .box-image {
     float: left;
     width: 749px;

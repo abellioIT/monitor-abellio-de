@@ -36,6 +36,7 @@ jobs:
         run: |
           git fetch gitlab master
           git checkout -B sync gitlab/master
+          ## Dieses Kommando wird fehlschlagen, daher der logische Operator mit true, damit die Pipeline nicht abschmiert
           git merge origin/main --no-commit --no-ff || true
       - name: Fix conflicts
         run: |
