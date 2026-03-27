@@ -34,12 +34,15 @@ jobs:
 
       - name: Prepare tree
         run: |
-          git checkout main
-          rm -rf .github/workflows
           git fetch gitlab master
-          git checkout gitlab/master -- .gitlab-ci.yml || true
-          git status
+          git checkout -B sync gitlab/master
+          git merge origin/main --no-commit --no-ff || true
+      - name: Fix conflicts
+        run: |
+          git rm -r --cached .github/workflows
+          git commit -m "Sync"
+          
 
-      # - name: Push to GitLab
-      #   run: |
-      #     git push gitlab main:master
+      - name: Push to GitLab
+        run: |
+          git push gitlab sync:master
