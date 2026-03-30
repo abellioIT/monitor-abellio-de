@@ -119,6 +119,8 @@ body,
     height: 100%;
 }
 .site-header {
+    display: flex;
+    justify-content: space-between;
     position: fixed;
     top: 0;
     left: 0;
@@ -181,13 +183,19 @@ body,
     left: 67px;
     font-size: 14px;
 }
+/* This is the svg branding */
 .branding {
-    position: relative;
-    top: 41px;
-    left: 48px;
-    width: 207px;
-    height: 51px;
+    height: 7rem;
+    width: auto;
+    padding: 1rem 0 0 1rem;
+
+    /* position: relative; */
+    /* top: 41px; */
+    /* left: 48px; */
+    /* width: 207px; */
+    /* height: 51px; */
 }
+/* This is the place where 'Verkehrsmeldungen' is written */
 .page-title {
     /* font-family: "Amasis", serif; */
     font-size: 48px;
