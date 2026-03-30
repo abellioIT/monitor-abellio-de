@@ -494,18 +494,18 @@ body,
 /* Thats the abellio way       */ 
 
 .main-content {
-  overflow: hidden;      /* hide cards that move out */
+  /* overflow: hidden;      /* hide cards that move out */ */
   width: 100%;
   padding: 16rem 0 4rem 4rem;
 }
 
 .cards-wrapper {
   display: flex;
-  padding-left: 13%;
 
   gap: 40px;             /* space between cards */
   transition: transform 0.5s ease;  /* smooth slide */
-  justify-content: center;
+  justify-content: flex-start;
+  padding-left: 0;
 }
 
 .traffic-card {
@@ -603,7 +603,7 @@ body,
 }
 
 .section-title {
-    color: #e21c23;
+   color: #e21c23;
     font-weight: 600;
     font-size: 1.5rem;
     margin-bottom: 6px;
