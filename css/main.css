@@ -189,7 +189,7 @@ body,
     height: 51px;
 }
 .page-title {
-    font-family: "Amasis", serif;
+    /* font-family: "Amasis", serif; */
     font-size: 48px;
     color: #fff;
     margin: 0;
