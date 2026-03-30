@@ -203,12 +203,48 @@ async function fetchHtml(url) {
     }
     return await response.text();
 }
+
+function render(combined){
+      // Wenn keine Verkehrsmeldungen am Start sind dann return diese tolle Meldung, dass alles ok ist :))))))
+      if(combined.length === 0){
+        var html = `
+        <div class="traffic-card no-messages">
+
+            <div>
+                <div class="section headline">
+                <b>Verkehrmeldungen</b>
+                </div>
+
+                <div class="section">
+                Momentan liegen keine Verkehrmeldungen vor.
+                </div>
+
+                <div class="section">
+                <em>Abellio wünscht gute Fahrt!</em>
+                </div>
+            </div>
+        </div>
+      `
+      }else{
+        var html = renderTrafficCards(combined);
+      }
+      document.getElementById("cards-wrapper").innerHTML = html;
+    
+      // Wärend die Daten geladen werden, wird nur ein Preloader angezeigt.
+      // Dieser wird hier entfernt 
+      document.querySelector(".preloader")?.remove();
+    
+      if(combined.length > 1){
+        startTicker(sliderDelay);
+      }
+}
 // --------------------------------------------------------------------
 // The action starts here
 
 // URL-Parameter auslesen
 const urlParams = new URLSearchParams(window.location.search);
 const type = urlParams.get('type') || 'alle'; // z.B. ?type=verkehr, ?type=baustelle, ?type=alle
+const debug = urlParams.get('debug') || 'false'; 
 
 let promises = [];
 
@@ -217,7 +253,16 @@ const fetchBaustelle = (type === 'baustelle' || type === 'alle' || !type) ? fetc
 
 promises.push(fetchVerkehr, fetchBaustelle);
 
-Promise.all(promises).then((results) => {
+
+if(debug === 'true'){
+  fetch('./mock-data.json')
+      .then(res => res.json())
+      .then(combined => {
+        render(combined);
+      });
+
+}else{
+  Promise.all(promises).then((results) => {
 
     let pv = [];
     let pb = [];
@@ -230,47 +275,15 @@ Promise.all(promises).then((results) => {
     if (type === 'baustelle' || type === 'alle' || !type) {
       pb = parseSiteFormResponse("baustelle", results[index]);
     }
-
-    const combined = pv.concat(pb);
-    console.log(combined);
-
-    // Wenn keine Verkehrsmeldungen am Start sind dann return diese tolle Meldung, dass alles ok ist :))))))
-    if(combined.length === 0){
-      var html = `
-      <div class="traffic-card no-messages">
-
-          <div>
-              <div class="section headline">
-              <b>Verkehrmeldungen</b>
-              </div>
-
-              <div class="section">
-              Momentan liegen keine Verkehrmeldungen vor.
-              </div>
-
-              <div class="section">
-              <em>Abellio wünscht gute Fahrt!</em>
-              </div>
-          </div>
-      </div>
-    `
-    }else{
-      var html = renderTrafficCards(combined);
-    }
-    document.getElementById("cards-wrapper").innerHTML = html;
     
-    // Wärend die Daten geladen werden, wird nur ein Preloader angezeigt.
-    // Dieser wird hier entfernt 
-    document.querySelector(".preloader")?.remove();
-    
-    if((pv.length > 1) || (pb.length > 1)){
-      startTicker(sliderDelay);
-    }
+     const combined = pv.concat(pb);
+     render(combined);
 
-  })
-  .catch(error => {
-    console.error("Fetch error:", error);
-});
+    })
+    .catch(error => {
+      console.error("Fetch error:", error);
+  });
+}
 
 setTimeout(() => {
   window.location.reload();
