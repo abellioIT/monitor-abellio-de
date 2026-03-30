@@ -196,14 +196,12 @@ function startTicker(delay) {
   }, delay);
 }
 
-function fetchHtml(url) {
-  return fetch(url)
-    .then(response => {
-      if (!response.ok) {
+async function fetchHtml(url) {
+  const response = await fetch(url);
+    if (!response.ok) {
         throw new Error(`Network error for ${url}`);
-      }
-      return response.text();
-    });
+    }
+    return await response.text();
 }
 // --------------------------------------------------------------------
 // The action starts here
