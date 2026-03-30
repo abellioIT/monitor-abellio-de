@@ -38,10 +38,13 @@ jobs:
           git checkout -B sync gitlab/master
           ## Dieses Kommando wird fehlschlagen, daher der logische Operator mit true, damit die Pipeline nicht abschmiert
           git merge origin/main --no-commit --no-ff || true
+      - name: List all files
+        run: |
+          ls -la
       - name: Fix conflicts
         run: |
-          git rm -r --cached .github/workflows
-          git commit -m "Sync"
+          git rm -r --cached .github/workflows || true
+          git commit -m "Sync" || true
           
 
       - name: Push to GitLab
