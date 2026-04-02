@@ -285,6 +285,10 @@ if(debug === 'true'){
   });
 }
 
+// Hide the cursor
+document.body.style.cursor = 'none';
+document.getElementById('cards-wrapper').focus()
+
 setTimeout(() => {
   window.location.reload();
 }, reloadAfter);

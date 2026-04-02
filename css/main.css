@@ -68,6 +68,12 @@
     content: "\e00a";
 }
 /*! HTML5 Boilerplate v5.0 | MIT License | http://h5bp.com/ */
+
+
+body, html {
+  cursor: none !important;
+}
+
 html {
     color: #6b717a;
     font-size: 1em;
