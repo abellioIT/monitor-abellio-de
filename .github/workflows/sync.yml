@@ -44,6 +44,7 @@ jobs:
       - name: Fix conflicts
         run: |
           git rm -r --cached .github/workflows || true
+          git add -A || true
           git commit -m "Sync" || true
           
 
