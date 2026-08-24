@@ -2,7 +2,7 @@
 const sliderDelay = 12 * 1000;
 // Nach dieser Zeit wird die Seite komplett neu geladen,
 // und somit die Daten neu von SiteForum gefetcht
-const reloadAfter =  10 * 60 * 1000; // 10 Minuten
+const reloadAfter = 10 * 60 * 1000; // 10 Minuten
 
 // Siteforum API
 const verkehrslage_url = "https://abrmd.siteforum.com/de/app/webtools/messages.widget?design=0&navigation=0&action=overview&scheduled=0";
@@ -34,14 +34,14 @@ const lineColors = {
 
 
 $("#header-date").clock({ seconds: "false", langSet: "de" }),
-$("#header-time").clock({ seconds: "false", calendar: "false", langSet: "de" });
+  $("#header-time").clock({ seconds: "false", calendar: "false", langSet: "de" });
 
 //---------------------------------------------------------------------------------------------------
 // Ab hier hat Abellio das Zepter wieder selbst in die Hand genommen und gecodet
 //
 
 
-// Diese Funktion hol sich aus dem CMS json.
+// Diese Funktion holt sich aus dem CMS json.
 // Das Siteforum liefert an sich aber nur HTML
 // Daher bauen wir hier einen Parser für dass HTML welchs
 // https://abrmd.siteforum.com/de/app/webtools/messages.widget?&design=0&navigation=0&action=overview&scheduled=0
@@ -127,14 +127,14 @@ function renderTrafficCards(data) {
   <path d="M0,0 L4,1 L5,5 L2,8 L-3,7 L-2,2 Z " fill="#131313" transform="translate(81,164)"/>
   </svg>
   `
-  
-  
-  const html = data.map(item =>  {
+
+
+  const html = data.map(item => {
     var icon
 
-    if(item.meldung === "verkehr"){
+    if (item.meldung === "verkehr") {
       icon = troete
-    }else{
+    } else {
       // Bei Baustellenmeldungen bleibt es gleich
       icon = werkzeug
     }
@@ -173,7 +173,8 @@ function renderTrafficCards(data) {
             </div>
         </div>
     </div>
-  `;}).join("");
+  `;
+  }).join("");
   return html
 }
 
@@ -197,17 +198,26 @@ function startTicker(delay) {
 }
 
 async function fetchHtml(url) {
-  const response = await fetch(url);
+  try {
+    const response = await fetch(url, {
+      cache: "no-store"
+    });
+
     if (!response.ok) {
-        throw new Error(`Network error for ${url}`);
+      throw new Error(`HTTP ${response.status} for ${url}`);
     }
+
     return await response.text();
+
+  } catch (error) {
+    throw error;
+  }
 }
 
-function render(combined){
-      // Wenn keine Verkehrsmeldungen am Start sind dann return diese tolle Meldung, dass alles ok ist :))))))
-      if(combined.length === 0){
-        var html = `
+function render(combined) {
+  // Wenn keine Verkehrsmeldungen am Start sind dann return diese tolle Meldung, dass alles ok ist :))))))
+  if (combined.length === 0) {
+    var html = `
         <div class="traffic-card no-messages">
 
             <div>
@@ -225,71 +235,77 @@ function render(combined){
             </div>
         </div>
       `
-      }else{
-        var html = renderTrafficCards(combined);
-      }
-      document.getElementById("cards-wrapper").innerHTML = html;
-    
-      // Wärend die Daten geladen werden, wird nur ein Preloader angezeigt.
-      // Dieser wird hier entfernt 
-      document.querySelector(".preloader")?.remove();
-    
-      if(combined.length > 1){
-        startTicker(sliderDelay);
-      }
-}
-// --------------------------------------------------------------------
-// The action starts here
+  } else {
+    var html = renderTrafficCards(combined);
+  }
+  document.getElementById("cards-wrapper").innerHTML = html;
 
+  // Wärend die Daten geladen werden, wird nur ein Preloader angezeigt.
+  // Dieser wird hier entfernt 
+  document.querySelector(".preloader")?.remove();
+
+  if (combined.length > 1) {
+    startTicker(sliderDelay);
+  }
+}
+
+// --------------------------------------------------------------------
 // URL-Parameter auslesen
 const urlParams = new URLSearchParams(window.location.search);
 const type = urlParams.get('type') || 'alle'; // z.B. ?type=verkehr, ?type=baustelle, ?type=alle
-const debug = urlParams.get('debug') || 'false'; 
-
+const debug = urlParams.get('debug') || 'false';
 let promises = [];
 
-const fetchVerkehr = (type === 'verkehr' || type === 'alle' || !type) ? fetchHtml(verkehrslage_url) : Promise.resolve();
-const fetchBaustelle = (type === 'baustelle' || type === 'alle' || !type) ? fetchHtml(baustellen_url) : Promise.resolve();;
+function start() {  
+  const promises = [];
 
-promises.push(fetchVerkehr, fetchBaustelle);
+  const fetchVerkehr = (type === 'verkehr' || type === 'alle' || !type) ? fetchHtml(verkehrslage_url) : Promise.resolve();
+  const fetchBaustelle = (type === 'baustelle' || type === 'alle' || !type) ? fetchHtml(baustellen_url) : Promise.resolve();;
 
+  promises.push(fetchVerkehr, fetchBaustelle);
 
-if(debug === 'true'){
-  fetch('./mock-data.json')
+  if (debug === 'true') {
+    fetch('./mock-data.json')
       .then(res => res.json())
       .then(combined => {
         render(combined);
       });
 
-}else{
-  Promise.all(promises).then((results) => {
+  } else {
+    Promise.all(promises).then((results) => {
 
-    let pv = [];
-    let pb = [];
-    let index = 0;
+      let pv = [];
+      let pb = [];
+      let index = 0;
 
-    if (type === 'verkehr' || type === 'alle' || !type) {
-      pv = parseSiteFormResponse("verkehr", results[index]);
-      index++;
-    }
-    if (type === 'baustelle' || type === 'alle' || !type) {
-      pb = parseSiteFormResponse("baustelle", results[index]);
-    }
-    
-     const combined = pv.concat(pb);
-     render(combined);
+      if (type === 'verkehr' || type === 'alle' || !type) {
+        pv = parseSiteFormResponse("verkehr", results[index]);
+        index++;
+      }
+      if (type === 'baustelle' || type === 'alle' || !type) {
+        pb = parseSiteFormResponse("baustelle", results[index]);
+      }
+
+      const combined = pv.concat(pb);
+      render(combined);
 
     })
-    .catch(error => {
-      console.error("Fetch error:", error);
-  });
+      .catch(error => {
+        console.error("Fetch error:", error);
+      });
+  }
+
+  setTimeout(() => {
+    console.log("start");
+    start();
+
+  }, reloadAfter);
 }
+
+// The action starts here
+start();
 
 // Hide the cursor
 document.body.style.cursor = 'none';
 document.getElementById('cards-wrapper').focus()
-
-setTimeout(() => {
-  window.location.reload();
-}, reloadAfter);
 
