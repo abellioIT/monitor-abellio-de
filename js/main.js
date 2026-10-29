@@ -180,21 +180,34 @@ function renderTrafficCards(data) {
 
 // Ticker slidet alle Elemente in .cards-wrapper (hier .traffic-cards) von rechts nach links
 // das vorne verschwindenede element, wird hinten dran getan
+let tickerInterval = null;
+let tickerTimeout = null;
+
 function startTicker(delay) {
-  const wrapper = document.querySelector(".cards-wrapper");
-  const cardWidth = wrapper.firstElementChild.offsetWidth + 40; // 40px = gap
+    clearInterval(tickerInterval);
+    clearTimeout(tickerTimeout);
 
+    const wrapper = document.querySelector(".cards-wrapper");
 
-  setInterval(() => {
-    wrapper.style.transition = "transform 0.5s ease";
-    wrapper.style.transform = `translateX(-${cardWidth}px)`;
-    setTimeout(() => {
-      wrapper.style.transition = "none";
-      wrapper.appendChild(wrapper.firstElementChild);
-      wrapper.style.transform = "translateX(0)";
-    }, 500); // match transition duration
-    // Änder diese Nummer um den Ticker zu verlangsamen ode rzu beschleunigen (5000 => 5 Sekunden)
-  }, delay);
+    if (!wrapper || wrapper.children.length <= 1) return;
+
+    tickerInterval = setInterval(() => {
+        const firstCard = wrapper.firstElementChild;
+        if (!firstCard) return;
+
+        const gap = parseFloat(getComputedStyle(wrapper).columnGap) || 40;
+        const cardWidth = firstCard.getBoundingClientRect().width + gap;
+
+        wrapper.style.transition = "transform 0.5s ease";
+        wrapper.style.transform = `translateX(-${cardWidth}px)`;
+
+        tickerTimeout = setTimeout(() => {
+            wrapper.style.transition = "none";
+            wrapper.appendChild(firstCard);
+            wrapper.style.transform = "translateX(0)";
+        }, 500);
+
+    }, delay);
 }
 
 async function fetchHtml(url) {
@@ -244,9 +257,7 @@ function render(combined) {
   // Dieser wird hier entfernt 
   document.querySelector(".preloader")?.remove();
 
-  if (combined.length > 1) {
-    startTicker(sliderDelay);
-  }
+  startTicker(sliderDelay);
 }
 
 // --------------------------------------------------------------------
@@ -296,7 +307,6 @@ function start() {
   }
 
   setTimeout(() => {
-    console.log("start");
     start();
 
   }, reloadAfter);
@@ -308,4 +318,3 @@ start();
 // Hide the cursor
 document.body.style.cursor = 'none';
 document.getElementById('cards-wrapper').focus()
-
